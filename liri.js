@@ -24,7 +24,7 @@ inquirer
             inquirer
                 .prompt([{
                     type: "input",
-                    message: "Type in your movie",
+                    message: "Type in your movie or enter nothing",
                     name: "username"
                 }, ])
                 .then(function(inquirerResponse) {
@@ -64,8 +64,11 @@ function runTwitter() {
     var params = { screen_name: 'piratecheese36' };
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
         if (!error) {
-            var twitterData = tweets[0].text
-            console.log(twitterData);
+            for (i = 0; i < tweets.length && i < 19; i++) {
+                var twitterData = tweets[i].text
+                console.log(twitterData);
+                fs.appendFile("log.txt", tweets[i].text + "\n", function(err) {});
+            }
         }
     });
 }
@@ -86,6 +89,11 @@ function runSpot(song) {
         console.log(track.name);
         console.log(track.preview_url);
         console.log(track.album.name);
+        fs.appendFile("log.txt", track.artists[0].name + "\n", function(err) {});
+        fs.appendFile("log.txt", track.name + "\n", function(err) {});
+        fs.appendFile("log.txt", track.preview_url + "\n", function(err) {});
+        fs.appendFile("log.txt", track.album.name + "\n", function(err) {});
+        fs.appendFile("log.txt", "----------------------" + "\n", function(err) {});
     });
 
 }
@@ -98,37 +106,48 @@ function runMovie(movie) {
         // If the request is successful (i.e. if the response status code is 200)
         if (!error && response.statusCode === 200) {
 
-            // Parse the body of the site and recover just the imdbRating
-            // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-            console.log("Title: " + JSON.parse(body).Title);
-            console.log("Year: " + JSON.parse(body).Year);
-            console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-            console.log("Country: " + JSON.parse(body).Country);
-            console.log("Language: " + JSON.parse(body).Language);
-            console.log("Plot: " + JSON.parse(body).Plot);
-            console.log("Actors/Actress's: " + JSON.parse(body).Actors);
-            console.log("Tomato Url: " + JSON.parse(body).Website);
+            if (movie === "") {
+                console.log("If you havent watched Mr. Nobody you should:http://www.imdb.com/title/tt0485947/");
+                console.log("Its on netflix!");
+
+            } else {
+
+                // Parse the body of the site and recover just the imdbRating
+                // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
+                console.log("Title: " + JSON.parse(body).Title);
+                console.log("Year: " + JSON.parse(body).Year);
+                console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+                console.log("Country: " + JSON.parse(body).Country);
+                console.log("Language: " + JSON.parse(body).Language);
+                console.log("Plot: " + JSON.parse(body).Plot);
+                console.log("Actors/Actress's: " + JSON.parse(body).Actors);
+                console.log("Tomato Url: " + JSON.parse(body).Website);
+                fs.appendFile("log.txt", JSON.parse(body).Title + "\n", function(err) {});
+                fs.appendFile("log.txt", JSON.parse(body).Year + "\n", function(err) {});
+                fs.appendFile("log.txt", JSON.parse(body).imdbRating + "\n", function(err) {});
+                fs.appendFile("log.txt", JSON.parse(body).Country + "\n", function(err) {});
+                fs.appendFile("log.txt", JSON.parse(body).Language + "\n", function(err) {});
+                fs.appendFile("log.txt", JSON.parse(body).Plot + "\n", function(err) {});
+                fs.appendFile("log.txt", JSON.parse(body).Actors + "\n", function(err) {});
+                fs.appendFile("log.txt", JSON.parse(body).Website + "\n", function(err) {});
+            }
         }
     });
 
 }
 
-function runDo(){
-	fs.readFile("random.txt", "utf8", function(error, data) {
+function runDo() {
+    fs.readFile("random.txt", "utf8", function(error, data) {
 
-  // If the code experiences any errors it will log the error to the console.
-  if (error) {
-    return console.log(error);
-  }
+        if (error) {
+            return console.log(error);
+        }
 
-  // We will then print the contents of data
-  console.log(data);
+        console.log(data);
 
-  // Then split it by commas (to make it more readable)
-  var dataArr = data.split(",");
+        var dataArr = data.split(",");
 
-  // We will then re-display the content as an array for later use.
-  runSpot(dataArr[1]);
+        runSpot(dataArr[1]);
 
-});
+    });
 }
