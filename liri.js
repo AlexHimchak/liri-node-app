@@ -69,6 +69,8 @@ function runTwitter() {
                 console.log(twitterData);
                 fs.appendFile("log.txt", tweets[i].text + "\n", function(err) {});
             }
+            fs.appendFile("log.txt", "----------" + "\n", function(err) {});
+
         }
     });
 }
@@ -130,6 +132,7 @@ function runMovie(movie) {
                 fs.appendFile("log.txt", JSON.parse(body).Plot + "\n", function(err) {});
                 fs.appendFile("log.txt", JSON.parse(body).Actors + "\n", function(err) {});
                 fs.appendFile("log.txt", JSON.parse(body).Website + "\n", function(err) {});
+                fs.appendFile("log.txt", "--------------" + "\n", function(err) {});
             }
         }
     });
